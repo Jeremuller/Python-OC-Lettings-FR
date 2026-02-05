@@ -14,7 +14,7 @@ class Address(models.Model):
         return f"{self.number} {self.street}"
 
     class Meta:
-        db_table = "oc_lettings_site_address"
+        db_table = "lettings_address"
 
 
 class Letting(models.Model):
@@ -26,4 +26,4 @@ class Letting(models.Model):
         return self.title
 
     class Meta:
-        db_table = "oc_lettings_site_letting"
+        db_table = "lettings_letting"
