@@ -1,6 +1,4 @@
 from django.shortcuts import render
-from lettings.models import Letting
-from profiles.models import Profile
 
 
 # Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie quam lobortis leo
@@ -12,7 +10,3 @@ from profiles.models import Profile
 # enim cursus in. Praesent volutpat porttitor magna, non finibus neque cursus id.
 def index(request):
     return render(request, "index.html")
-
-
-
-
