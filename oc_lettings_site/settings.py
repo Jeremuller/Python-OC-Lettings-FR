@@ -1,3 +1,23 @@
+"""
+Django settings for the oc_lettings_site project.
+
+This configuration file defines the core settings used to run
+the application in a development environment.
+
+It includes:
+
+- Application registration
+- Middleware configuration
+- Template settings
+- Database configuration (SQLite)
+- Authentication and password validation rules
+- Internationalization settings
+- Static file management
+
+These settings are intended for development purposes and
+are not optimized for production deployment.
+"""
+
 import os
 
 from pathlib import Path
