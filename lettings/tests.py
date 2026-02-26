@@ -11,7 +11,8 @@ Fixtures:
 """
 
 import pytest
-from lettings.models import Address
+from django.urls import reverse, resolve
+from lettings import views
 
 
 @pytest.mark.django_db
@@ -100,10 +101,6 @@ The following aspects are tested:
 - HTTP response status codes for defined routes
 """
 
-import pytest
-from django.urls import reverse, resolve
-from lettings import views
-
 
 @pytest.mark.django_db
 def test_lettings_index_url_reverse():
@@ -174,3 +171,101 @@ def test_letting_detail_http_response(client, letting):
     """
     response = client.get(reverse("lettings:letting", args=[letting.id]))
     assert response.status_code == 200
+
+
+"""
+View tests for the lettings application.
+
+This module verifies that view functions defined in lettings.views
+correctly render templates, return expected HTTP responses,
+and provide appropriate context data.
+
+The following views are tested:
+- lettings_index
+- letting
+"""
+
+
+@pytest.mark.django_db
+def test_lettings_index_view_status_code(client):
+    """
+    Test that the lettings_index view returns HTTP 200.
+    """
+    response = client.get(reverse("lettings:lettings_index"))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_lettings_index_view_template(client):
+    """
+    Test that the correct template is used
+    for the lettings_index view.
+    """
+    response = client.get(reverse("lettings:lettings_index"))
+    assert "lettings/index.html" in [t.name for t in response.templates]
+
+
+@pytest.mark.django_db
+def test_lettings_index_context(client, letting):
+    """
+    Test that the lettings_index view provides
+    the correct context data.
+
+    Args:
+        letting (Letting): Fixture providing a sample Letting instance.
+    """
+    response = client.get(reverse("lettings:lettings_index"))
+
+    assert "lettings_list" in response.context
+    assert letting in response.context["lettings_list"]
+
+
+@pytest.mark.django_db
+def test_letting_detail_view_status_code(client, letting):
+    """
+    Test that the letting detail view returns HTTP 200
+    for a valid letting ID.
+    """
+    response = client.get(
+        reverse("lettings:letting", args=[letting.id])
+    )
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_letting_detail_view_template(client, letting):
+    """
+    Test that the correct template is used
+    for the letting detail view.
+    """
+    response = client.get(
+        reverse("lettings:letting", args=[letting.id])
+    )
+    assert "lettings/letting.html" in [t.name for t in response.templates]
+
+
+@pytest.mark.django_db
+def test_letting_detail_context(client, letting):
+    """
+    Test that the letting detail view provides
+    the correct context variables.
+
+    Args:
+        letting (Letting): Fixture providing a sample Letting instance.
+    """
+    response = client.get(
+        reverse("lettings:letting", args=[letting.id])
+    )
+
+    assert response.context["title"] == letting.title
+    assert response.context["address"] == letting.address
+
+
+@pytest.mark.django_db
+def test_letting_detail_invalid_id(client):
+    """
+    Test that accessing a non-existing letting
+    raises a DoesNotExist exception.
+    """
+    with pytest.raises(Exception):
+        client.get(reverse("lettings:letting", args=[9999]))
