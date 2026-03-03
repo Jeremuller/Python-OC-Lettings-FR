@@ -54,9 +54,6 @@ ensuring that model fields, string representations, and
 one-to-one relationships work correctly.
 """
 
-import pytest
-from lettings.models import Letting, Address
-
 
 @pytest.mark.django_db
 def test_letting_str(letting):
@@ -226,9 +223,7 @@ def test_letting_detail_view_status_code(client, letting):
     Test that the letting detail view returns HTTP 200
     for a valid letting ID.
     """
-    response = client.get(
-        reverse("lettings:letting", args=[letting.id])
-    )
+    response = client.get(reverse("lettings:letting", args=[letting.id]))
     assert response.status_code == 200
 
 
@@ -238,9 +233,7 @@ def test_letting_detail_view_template(client, letting):
     Test that the correct template is used
     for the letting detail view.
     """
-    response = client.get(
-        reverse("lettings:letting", args=[letting.id])
-    )
+    response = client.get(reverse("lettings:letting", args=[letting.id]))
     assert "lettings/letting.html" in [t.name for t in response.templates]
 
 
@@ -253,9 +246,7 @@ def test_letting_detail_context(client, letting):
     Args:
         letting (Letting): Fixture providing a sample Letting instance.
     """
-    response = client.get(
-        reverse("lettings:letting", args=[letting.id])
-    )
+    response = client.get(reverse("lettings:letting", args=[letting.id]))
 
     assert response.context["title"] == letting.title
     assert response.context["address"] == letting.address
