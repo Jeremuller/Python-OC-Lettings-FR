@@ -97,3 +97,86 @@ def test_profile_detail_url_resolves():
     """
     resolver = resolve("/profiles/testuser/")
     assert resolver.func == views.profile
+
+
+"""
+View tests for the profiles application.
+
+This module verifies that profile-related views return the correct
+HTTP responses, use the expected templates, and provide the correct
+context data.
+"""
+
+
+@pytest.mark.django_db
+def test_profiles_index_view_status_code(client, profile):
+    """
+    Test that the profiles index view returns HTTP 200.
+
+    Args:
+        client (Client): Django test client.
+        profile (Profile): Fixture providing a Profile instance.
+    """
+    response = client.get(reverse("profiles:profiles_index"))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_profiles_index_view_template(client, profile):
+    """
+    Test that the profiles index view uses the correct template.
+    """
+    response = client.get(reverse("profiles:profiles_index"))
+    assert "profiles/index.html" in [t.name for t in response.templates]
+
+
+@pytest.mark.django_db
+def test_profiles_index_context(client, profile):
+    """
+    Test that the profiles index view includes profiles in context.
+    """
+    response = client.get(reverse("profiles:profiles_index"))
+    assert "profiles_list" in response.context
+    assert profile in response.context["profiles_list"]
+
+
+@pytest.mark.django_db
+def test_profile_detail_view_status_code(client, profile):
+    """
+    Test that the profile detail view returns HTTP 200
+    for an existing profile.
+    """
+    response = client.get(reverse("profiles:profile", args=[profile.user.username]))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_profile_detail_view_template(client, profile):
+    """
+    Test that the profile detail view uses the correct template.
+    """
+    response = client.get(reverse("profiles:profile", args=[profile.user.username]))
+    assert "profiles/profile.html" in [t.name for t in response.templates]
+
+
+@pytest.mark.django_db
+def test_profile_detail_context(client, profile):
+    """
+    Test that the profile detail view passes the correct
+    profile object to the template context.
+    """
+    response = client.get(reverse("profiles:profile", args=[profile.user.username]))
+    assert "profile" in response.context
+    assert response.context["profile"] == profile
+
+
+@pytest.mark.django_db
+def test_profile_detail_nonexistent(client):
+    """
+    Test that requesting a non-existing profile raises an error.
+
+    Since the view uses Profile.objects.get(), Django will raise
+    a Profile.DoesNotExist exception, resulting in a server error.
+    """
+    with pytest.raises(Exception):
+        client.get(reverse("profiles:profile", args=["unknownuser"]))
