@@ -80,3 +80,32 @@ def test_admin_url_accessible(client):
     """
     response = client.get("/admin/")
     assert response.status_code in (200, 302)
+
+
+"""
+View tests for the main Django project (oc_lettings_site).
+
+This module verifies that the project-level views return
+correct HTTP responses and render the expected templates.
+
+The following view is tested:
+- index
+"""
+
+
+@pytest.mark.django_db
+def test_index_view_status_code(client):
+    """
+    Test that the index view returns HTTP 200.
+    """
+    response = client.get(reverse("index"))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_index_view_template(client):
+    """
+    Test that the index view renders the correct template.
+    """
+    response = client.get(reverse("index"))
+    assert "index.html" in [t.name for t in response.templates]
