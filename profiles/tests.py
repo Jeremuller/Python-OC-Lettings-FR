@@ -8,6 +8,8 @@ This module verifies:
 """
 
 import pytest
+from django.urls import reverse, resolve
+from profiles import views
 
 
 @pytest.mark.django_db
@@ -42,3 +44,56 @@ def test_profile_user_relationship(profile):
     Ensures the related_name 'new_user' works correctly.
     """
     assert profile.user.new_user == profile
+
+
+"""
+URL tests for the profiles application.
+
+This module verifies that URL patterns defined in profiles.urls
+correctly resolve to the expected view functions and that
+URL reversing works as intended.
+"""
+
+
+@pytest.mark.django_db
+def test_profiles_index_url_reverse():
+    """
+    Test that the profiles index URL is correctly reversed.
+
+    Ensures the 'profiles:profiles_index' named route
+    generates the expected URL path.
+    """
+    url = reverse("profiles:profiles_index")
+    assert url == "/profiles/"
+
+
+@pytest.mark.django_db
+def test_profiles_index_url_resolves():
+    """
+    Test that the profiles index URL resolves
+    to the correct view function.
+    """
+    resolver = resolve("/profiles/")
+    assert resolver.func == views.profiles_index
+
+
+@pytest.mark.django_db
+def test_profile_detail_url_reverse():
+    """
+    Test that the profile detail URL is correctly reversed.
+
+    Ensures the 'profiles:profile' named route generates
+    the expected URL when provided with a username.
+    """
+    url = reverse("profiles:profile", args=["testuser"])
+    assert url == "/profiles/testuser/"
+
+
+@pytest.mark.django_db
+def test_profile_detail_url_resolves():
+    """
+    Test that the profile detail URL resolves
+    to the correct view function.
+    """
+    resolver = resolve("/profiles/testuser/")
+    assert resolver.func == views.profile

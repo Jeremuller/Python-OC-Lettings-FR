@@ -45,7 +45,6 @@ def test_address_fields(address):
     assert address.country_iso_code == "USA"
 
 
-
 """
 Unit tests for the Letting model in lettings.models.
 
