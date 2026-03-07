@@ -6,39 +6,31 @@ Django User model with additional application-specific data,
 such as the user's favorite city.
 """
 
-from django.db import models
+import pytest
 from django.contrib.auth.models import User
+from profiles.models import Profile
 
 
-class Profile(models.Model):
+@pytest.fixture
+def user():
     """
-    Profile model extending Django's built-in User.
+    Fixture that creates a sample Django User instance.
 
-    Attributes:
-        user (OneToOneField): A one-to-one relationship with the User model,
-            ensuring each user has a single profile. The related_name
-            "new_user" allows reverse access from User instances.
-        favorite_city (CharField): Optional field storing the user's
-            favorite city, with a maximum length of 64 characters.
+    Returns:
+        User: A saved User instance with test credentials.
     """
+    return User.objects.create(username="testuser")
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="new_user")
-    favorite_city = models.CharField(max_length=64, blank=True)
 
-    def __str__(self):
-        """
-        Returns a string representation of the Profile instance.
+@pytest.fixture
+def profile(user):
+    """
+    Fixture that creates a sample Profile instance linked to a User.
 
-        Returns:
-            str: The username of the associated User.
-        """
-        return self.user.username
+    Args:
+        user (User): Fixture providing a User instance.
 
-    class Meta:
-        """
-        Metadata for the Profile model.
-
-        Attributes:
-            db_table (str): Explicit database table name for the model.
-        """
-        db_table = "profiles_profile"
+    Returns:
+        Profile: A saved Profile instance with sample data.
+    """
+    return Profile.objects.create(user=user, favorite_city="Paris")
