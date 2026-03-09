@@ -259,3 +259,192 @@ def test_letting_detail_invalid_id(client):
     """
     with pytest.raises(Exception):
         client.get(reverse("lettings:letting", args=[9999]))
+
+
+"""
+Integration tests for the `lettings` Django application.
+
+These tests validate the behavior of the application by exercising
+the full request/response cycle of the Django stack:
+
+    URL routing → View execution → Database access → Template rendering → HTTP response
+
+Unlike unit tests that focus on isolated components (models, views, or URLs),
+integration tests ensure that multiple layers of the application work together
+correctly when accessed through real HTTP requests.
+
+The following scenarios are covered:
+
+Happy paths:
+    - Accessing the lettings index page successfully
+    - Displaying existing lettings in the index page
+    - Navigating to the detail page of a specific letting
+    - Displaying letting address information correctly
+
+Edge cases:
+    - Rendering the index page when no lettings exist
+
+Sad paths (TDD approach):
+    - Requesting a letting that does not exist should return HTTP 404
+
+Some tests intentionally document expected future behavior such as
+proper 404 error handling. These tests may initially fail until the
+application implements the appropriate error management.
+
+This approach follows Test-Driven Development (TDD) principles.
+"""
+
+
+@pytest.mark.django_db
+def test_lettings_index_page_accessible(client):
+    """
+    Verify that the lettings index page is accessible via HTTP.
+
+    This test ensures that the URL associated with the lettings index
+    view is correctly configured and returns a valid HTTP response.
+
+    The test validates that:
+        - The URL can be resolved using Django's reverse function
+        - The HTTP response status code is 200 (OK)
+        - The correct template is used to render the page
+
+    This confirms that URL routing, view execution, and template
+    rendering work correctly together.
+    """
+    url = reverse("lettings:lettings_index")
+
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "lettings/index.html" in [t.name for t in response.templates]
+
+
+@pytest.mark.django_db
+def test_lettings_index_displays_existing_lettings(client, letting):
+    """
+    Verify that existing lettings are displayed on the index page.
+
+    This test creates a Letting instance using a fixture and ensures
+    that the index page correctly retrieves and renders the letting
+    information.
+
+    The test validates that:
+        - The letting instance is retrieved from the database
+        - The letting title appears in the rendered HTML response
+
+    This confirms that the view properly interacts with the database
+    and passes the expected context data to the template.
+    """
+    url = reverse("lettings:lettings_index")
+
+    response = client.get(url)
+
+    content = response.content.decode()
+
+    assert letting.title in content
+
+
+@pytest.mark.django_db
+def test_lettings_index_handles_empty_dataset(client):
+    """
+    Verify the behavior of the index page when no lettings exist.
+
+    When the database contains no Letting instances, the template
+    should display a fallback message informing the user that
+    no lettings are available.
+
+    The test validates that:
+        - The page still renders successfully
+        - The appropriate message appears in the response
+
+    This ensures the application handles empty datasets gracefully.
+    """
+    url = reverse("lettings:lettings_index")
+
+    response = client.get(url)
+
+    content = response.content.decode()
+
+    assert response.status_code == 200
+    assert "No lettings are available." in content
+
+
+@pytest.mark.django_db
+def test_letting_detail_page_accessible(client, letting):
+    """
+    Verify that a letting detail page can be accessed successfully.
+
+    This test ensures that a valid letting ID correctly resolves
+    to the letting detail view and that the page renders without errors.
+
+    The test validates that:
+        - The correct URL is generated using reverse()
+        - The view retrieves the letting from the database
+        - The correct template is used to render the page
+        - The HTTP response status is 200 (OK)
+
+    This confirms the correct integration of URL routing,
+    database access, and template rendering.
+    """
+    url = reverse("lettings:letting", args=[letting.id])
+
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "lettings/letting.html" in [t.name for t in response.templates]
+
+
+@pytest.mark.django_db
+def test_letting_detail_displays_address_information(client, letting):
+    """
+    Verify that the letting detail page displays address information.
+
+    This test ensures that the address fields associated with the
+    letting instance are correctly passed to the template and rendered
+    in the final HTML output.
+
+    The test checks that the response contains:
+        - the letting title
+        - the street name
+        - the city name
+
+    This confirms that the relationship between Letting and Address
+    models is correctly handled and displayed by the view and template.
+    """
+    url = reverse("lettings:letting", args=[letting.id])
+
+    response = client.get(url)
+
+    content = response.content.decode()
+
+    assert letting.title in content
+    assert letting.address.street in content
+    assert letting.address.city in content
+
+
+@pytest.mark.django_db
+def test_letting_detail_returns_404_for_unknown_letting(client):
+    """
+    Verify that requesting a non-existent letting returns HTTP 404.
+
+    This test represents the expected behavior for the application
+    when a user attempts to access a letting that does not exist
+    in the database.
+
+    According to REST and Django best practices, the application
+    should return an HTTP 404 (Not Found) response instead of
+    raising an unhandled exception.
+
+    This test follows a Test-Driven Development (TDD) approach:
+        - It defines the expected behavior first
+        - The test may initially fail if the view does not yet
+          implement proper 404 handling
+
+    The test will pass once the view uses Django's `get_object_or_404`
+    helper or equivalent error handling.
+    """
+    url = reverse("lettings:letting", args=[9999])
+
+    response = client.get(url)
+
+    assert response.status_code == 404
