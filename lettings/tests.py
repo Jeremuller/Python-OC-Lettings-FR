@@ -1,4 +1,3 @@
-# tests/test_models.py
 """
 Unit tests for the lettings.models module.
 
@@ -451,6 +450,7 @@ def test_letting_detail_returns_404_for_unknown_letting(client):
     response = client.get(url)
 
     assert response.status_code == 404
+    assert "Sorry, the page you are looking for does not exist." in response.content.decode()
 
 
 """
@@ -624,3 +624,4 @@ def test_unknown_url_returns_404(client):
     response = client.get("/this-page-does-not-exist/")
 
     assert response.status_code == 404
+    assert "Sorry, the page you are looking for does not exist." in response.content.decode()

@@ -182,6 +182,7 @@ def test_profile_detail_nonexistent_returns_404(client):
     response = client.get(reverse("profiles:profile", args=["unknownuser"]))
 
     assert response.status_code == 404
+    assert "Sorry, the page you are looking for does not exist." in response.content.decode()
 
 
 """
@@ -398,3 +399,4 @@ def test_profile_detail_user_without_profile_returns_404(client):
     response = client.get(url)
 
     assert response.status_code == 404
+    assert "Sorry, the page you are looking for does not exist." in response.content.decode()

@@ -15,6 +15,9 @@ import pytest
 from django.urls import reverse, resolve
 from oc_lettings_site import views
 
+from django.test import RequestFactory
+from django.core.handlers.exception import response_for_exception
+
 
 @pytest.mark.django_db
 def test_index_url_reverse():
@@ -109,3 +112,16 @@ def test_index_view_template(client):
     """
     response = client.get(reverse("index"))
     assert "index.html" in [t.name for t in response.templates]
+
+
+def test_500_handler_unit():
+    factory = RequestFactory()
+    request = factory.get("/")
+
+    try:
+        raise Exception("forced")
+    except Exception as e:
+        response = response_for_exception(request, e)
+
+    assert response.status_code == 500
+    assert "Something went wrong on our side" in response.content.decode()
