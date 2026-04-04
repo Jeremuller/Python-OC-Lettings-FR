@@ -8,7 +8,7 @@ Each view retrieves data from the database using the Letting model
 and renders the appropriate HTML template with a context dictionary.
 """
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest, HttpResponse
 from .models import Letting
 
@@ -45,8 +45,9 @@ def letting(request: HttpRequest, letting_id: int) -> HttpResponse:
     :return: Rendered HTML page displaying the letting details.
     :rtype: HttpResponse
     :raises Letting.DoesNotExist: If no letting matches the given ID.
+    :raises Http404: If no letting matches the given ID.
     """
-    letting = Letting.objects.get(id=letting_id)
+    letting = get_object_or_404(Letting, id=letting_id)
     context = {
         "title": letting.title,
         "address": letting.address,

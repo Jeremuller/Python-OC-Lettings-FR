@@ -19,14 +19,17 @@ from . import views
 
 urlpatterns = [
     # Home page
-    path('', views.index, name='index'),
-
+    path("", views.index, name="index"),
     # Lettings app: routes are defined in lettings.urls
-    path('lettings/', include('lettings.urls')),
-
+    path("lettings/", include("lettings.urls")),
     # Profiles app: routes are defined in profiles.urls
-    path('profiles/', include('profiles.urls')),
-
+    path("profiles/", include("profiles.urls")),
     # Django admin interface
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
 ]
+
+
+# Error handling:
+
+handler404 = "oc_lettings_site.views.page_not_found"
+handler500 = "oc_lettings_site.views.server_error"

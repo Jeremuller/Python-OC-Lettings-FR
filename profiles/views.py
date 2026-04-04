@@ -7,7 +7,7 @@ Each view retrieves data from the database and passes it to
 the corresponding templates for rendering.
 """
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Profile
 
 
@@ -19,11 +19,11 @@ def profiles_index(request):
     to the 'profiles/index.html' template under the context variable
     'profiles_list'.
 
-    Args:
-        request (HttpRequest): The HTTP request object.
+    :param request: The HTTP request object.
+    :type request: HttpRequest
 
-    Returns:
-        HttpResponse: Rendered HTML page with the list of profiles.
+    :return: Rendered HTML page with the list of profiles.
+    :rtype: HttpResponse
     """
     profiles_list = Profile.objects.all()
     context = {"profiles_list": profiles_list}
@@ -38,13 +38,16 @@ def profile(request, username):
     to the provided username and passes it to the
     'profiles/profile.html' template under the context variable 'profile'.
 
-    Args:
-        request (HttpRequest): The HTTP request object.
-        username (str): The username of the user whose profile is requested.
+    :param request: The HTTP request object.
+    :type request: HttpRequest
+    :param username: The username of the user whose profile is requested.
+    :type username: str
 
-    Returns:
-        HttpResponse: Rendered HTML page with the profile details.
+    :return: Rendered HTML page with the profile details.
+    :rtype: HttpResponse
+
+    :raises Http404: If no profile matches the given username.
     """
-    profile = Profile.objects.get(user__username=username)
+    profile = get_object_or_404(Profile, user__username=username)
     context = {"profile": profile}
     return render(request, "profiles/profile.html", context)

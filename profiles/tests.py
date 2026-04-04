@@ -172,15 +172,16 @@ def test_profile_detail_context(client, profile):
 
 
 @pytest.mark.django_db
-def test_profile_detail_nonexistent(client):
+def test_profile_detail_nonexistent_returns_404(client):
     """
-    Test that requesting a non-existing profile raises an error.
+    Ensure that requesting a non-existing profile returns HTTP 404.
 
-    Since the view uses Profile.objects.get(), Django will raise
-    a Profile.DoesNotExist exception, resulting in a server error.
+    The view uses get_object_or_404, so a missing profile should
+    result in a 404 response instead of an exception.
     """
-    with pytest.raises(Exception):
-        client.get(reverse("profiles:profile", args=["unknownuser"]))
+    response = client.get(reverse("profiles:profile", args=["unknownuser"]))
+
+    assert response.status_code == 404
 
 
 """

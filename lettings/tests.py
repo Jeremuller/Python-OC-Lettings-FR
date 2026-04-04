@@ -252,13 +252,16 @@ def test_letting_detail_context(client, letting):
 
 
 @pytest.mark.django_db
-def test_letting_detail_invalid_id(client):
+def test_letting_detail_invalid_id_returns_404(client):
     """
-    Test that accessing a non-existing letting
-    raises a DoesNotExist exception.
+    Ensure that requesting a non-existing letting returns HTTP 404.
+
+    The view now uses get_object_or_404, which should return a
+    404 response instead of raising an exception.
     """
-    with pytest.raises(Exception):
-        client.get(reverse("lettings:letting", args=[9999]))
+    response = client.get(reverse("lettings:letting", args=[9999]))
+
+    assert response.status_code == 404
 
 
 """
