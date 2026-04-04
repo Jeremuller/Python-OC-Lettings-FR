@@ -56,6 +56,8 @@ class Address(models.Model):
         """
 
         db_table = "lettings_address"
+        verbose_name = "Address"
+        verbose_name_plural = "Addresses"
 
 
 class Letting(models.Model):
