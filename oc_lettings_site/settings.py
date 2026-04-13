@@ -22,6 +22,9 @@ import os
 from dotenv import load_dotenv
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+
+import logging
 
 from pathlib import Path
 
@@ -38,17 +41,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 SENTRY_DSN = os.getenv("SENTRY_DSN")
 
 if SENTRY_DSN:
+
+    sentry_logging = LoggingIntegration(
+        level=logging.INFO,
+        event_level=logging.ERROR,
+    )
+
     sentry_sdk.init(
-        dsn=SENTRY_DSN,
-        integrations=[DjangoIntegration()],
-        traces_sample_rate=1.0
+        dsn=SENTRY_DSN, integrations=[DjangoIntegration(), sentry_logging], traces_sample_rate=1.0
     )
 
 # Application definition
