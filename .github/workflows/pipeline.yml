@@ -1,11 +1,11 @@
-name: CI
+name: Pipeline
 
 on:
   push:
   pull_request:
 
 jobs:
-  test:
+  compile:
 
     runs-on: ubuntu-latest
 
@@ -37,3 +37,31 @@ jobs:
       # 5. Tests + coverage
       - name: Run tests with coverage
         run: pytest --cov=. --cov-report=term-missing --cov-fail-under=80
+
+
+  containerize:
+
+    needs: compile
+
+    if: github.ref == 'refs/heads/master'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Login Docker Hub
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # 3. Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/oc_lettings_site:${{ github.sha }} .
+
+      # 4. Push image to Docker Hub
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/oc_lettings_site:${{ github.sha }}
