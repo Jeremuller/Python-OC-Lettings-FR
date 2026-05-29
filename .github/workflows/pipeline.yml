@@ -12,7 +12,7 @@ jobs:
     env:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-      USE_SQLITE: "True"
+      USE_SQLITE: True
 
     steps:
       # 1. Checkout
