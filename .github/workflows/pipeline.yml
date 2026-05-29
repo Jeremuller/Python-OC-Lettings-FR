@@ -35,6 +35,11 @@ jobs:
       - name: Run flake8
         run: flake8 .
 
+      # 5. Debug environment
+      - name: Debug database configuration
+        run: |
+          echo "USE_SQLITE=$USE_SQLITE"  
+
       # 5. Tests + coverage
       - name: Run tests with coverage
         run: pytest --cov=. --cov-report=term-missing --cov-fail-under=80
