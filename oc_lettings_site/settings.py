@@ -105,7 +105,7 @@ WSGI_APPLICATION = "oc_lettings_site.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-USE_SQLITE = os.getenv("USE_SQLITE", "False") == "True"
+USE_SQLITE = os.getenv("USE_SQLITE", "").strip().lower() == "true"
 
 if USE_SQLITE:
     DATABASES = {
