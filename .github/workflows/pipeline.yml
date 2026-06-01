@@ -35,13 +35,6 @@ jobs:
       - name: Run flake8
         run: flake8 .
 
-      # 5. Debug environment
-      - name: Debug database configuration
-        run: |
-          echo "USE_SQLITE=$USE_SQLITE"  
-          python -c "import os; print('USE_SQLITE=', os.getenv('USE_SQLITE'))"
-          python manage.py shell -c "from django.conf import settings; print(settings.DATABASES)"
-
       # 5. Tests + coverage
       - name: Run tests with coverage
         run: pytest --cov=. --cov-report=term-missing --cov-fail-under=80
