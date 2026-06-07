@@ -1,21 +1,35 @@
 """
 Django settings for the oc_lettings_site project.
 
-This configuration file defines the core settings used to run
-the application in a development environment.
+This configuration file defines the settings used to run the application
+across development, testing and production environments.
 
-It includes:
+Main features include:
 
-- Application registration
-- Middleware configuration
-- Template settings
-- Database configuration (SQLite)
-- Authentication and password validation rules
-- Internationalization settings
-- Static file management
+Django application registration
+Middleware configuration
+Template configuration
+Environment-based database selection (SQLite or PostgreSQL)
+Authentication and password validation
+Internationalization settings
+Static files management with WhiteNoise
+Error monitoring with Sentry
+Environment variable configuration through .env files
 
-These settings are intended for development purposes and
-are not optimized for production deployment.
+Database strategy:
+
+SQLite is used for local development and CI testing when
+USE_SQLITE is enabled.
+PostgreSQL is used for containerized and production deployments.
+
+Static assets are collected during the Docker image build process
+and served through WhiteNoise.
+
+Sensitive settings such as credentials, secret keys and deployment
+configuration are injected through environment variables.
+
+This file is designed to support both local development and
+production-ready deployments.
 """
 
 import os
@@ -74,6 +88,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -105,14 +120,28 @@ WSGI_APPLICATION = "oc_lettings_site.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "oc-lettings-site.sqlite3"),
-    }
-}
+USE_SQLITE = os.getenv("USE_SQLITE", "").strip().lower() == "true"
 
-# Password validation
+if USE_SQLITE:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": str(BASE_DIR / "db.sqlite3"),
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
+        }
+    }
+
+# Password validations
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -135,18 +164,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Etc/UTC"
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -154,3 +181,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+STATICFILES_STORAGE = (
+    "whitenoise.storage.CompressedStaticFilesStorage"
+)
