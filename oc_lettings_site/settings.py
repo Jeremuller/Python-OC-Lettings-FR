@@ -1,21 +1,35 @@
 """
 Django settings for the oc_lettings_site project.
 
-This configuration file defines the core settings used to run
-the application in a development environment.
+This configuration file defines the settings used to run the application
+across development, testing and production environments.
 
-It includes:
+Main features include:
 
-- Application registration
-- Middleware configuration
-- Template settings
-- Database configuration (SQLite)
-- Authentication and password validation rules
-- Internationalization settings
-- Static file management
+Django application registration
+Middleware configuration
+Template configuration
+Environment-based database selection (SQLite or PostgreSQL)
+Authentication and password validation
+Internationalization settings
+Static files management with WhiteNoise
+Error monitoring with Sentry
+Environment variable configuration through .env files
 
-These settings are intended for development purposes and
-are not optimized for production deployment.
+Database strategy:
+
+SQLite is used for local development and CI testing when
+USE_SQLITE is enabled.
+PostgreSQL is used for containerized and production deployments.
+
+Static assets are collected during the Docker image build process
+and served through WhiteNoise.
+
+Sensitive settings such as credentials, secret keys and deployment
+configuration are injected through environment variables.
+
+This file is designed to support both local development and
+production-ready deployments.
 """
 
 import os
