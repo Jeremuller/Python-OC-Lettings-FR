@@ -24,5 +24,7 @@ RUN SECRET_KEY=dummy-secret-key \
 # Expose port
 EXPOSE 8000
 
-# Run server
-CMD gunicorn oc_lettings_site.wsgi:application --bind 0.0.0.0:$PORT
+# Run server with start.sh script
+RUN chmod +x start.sh
+
+CMD ["./start.sh"]
