@@ -110,27 +110,27 @@ Dans le reste de la documentation sur le développement local, il est supposé q
 ### Cloner le repository 
 
 - cd /path/to/put/project/in 
-- git clone https://github.com/OpenClassrooms-Student-Center/Python-OC-Lettings-FR.git 
+- `git clone https://github.com/OpenClassrooms-Student-Center/Python-OC-Lettings-FR.git`
 
 ### Créer l'environnement virtuel 
 
 Pour le développement local, il est recommandé d'utiliser un environnement virtuel Python : 
 - cd /path/to/Python-OC-Lettings-FR 
-- python -m venv venv 
-- apt-get install python3-venv (Si l'étape précédente comporte des erreurs avec un paquet non trouvé sur Ubuntu) 
-- Activer l'environnement: Linux / macOS: source venv/bin/activate ou .\venv\Scripts\Activate.ps pour Windows (PowerShell) 
-- Confirmer que la commande python exécute l'interpréteur Python dans l'environnement virtuel which python 
-- Confirmer que la version de l'interpréteur Python est la version 3.6 ou supérieure python --version 
-- Confirmer que la commande pip exécute l'exécutable pip dans l'environnement virtuel, which pip 
-- Pour désactiver l'environnement, deactivate 
+- `python -m venv venv`
+- `apt-get install python3-venv` (Si l'étape précédente comporte des erreurs avec un paquet non trouvé sur Ubuntu) 
+- Activer l'environnement: Linux / macOS: `source venv/bin/activate` ou `.\venv\Scripts\Activate.ps` pour Windows (PowerShell) 
+- Confirmer que la commande python exécute l'interpréteur Python dans l'environnement virtuel `which python `
+- Confirmer que la version de l'interpréteur Python est la version 3.6 ou supérieure `python --version `
+- Confirmer que la commande pip exécute l'exécutable pip dans l'environnement virtuel, `which pip `
+- Pour désactiver l'environnement, `deactivate `
 
 Les sections suivantes présentent les différentes méthodes d'exécution de l'application, selon que vous souhaitiez simplement la découvrir ou contribuer à son développement. 
 
 ### Exécuter le site (quick start) 
 - cd /path/to/Python-OC-Lettings-FR 
-- source venv/bin/activate 
-- pip install --requirement requirements.txt 
-- python manage.py runserver 
+- `source venv/bin/activate `
+- `pip install --requirement requirements.txt `
+- `python manage.py runserver `
 - Aller sur http://localhost:8000 dans un navigateur. 
 - Confirmer que le site fonctionne et qu'il est possible de naviguer (vous devriez voir plusieurs profils et locations).
 
