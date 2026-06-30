@@ -95,7 +95,6 @@ Code source → GitHub Actions → Docker Image → DockerHub → Render → App
 ### Variables d’environnement 
 - python-dotenv : gestion des variables d’environnement en développement
 
-
 ## Usage local 
 
 ### Prérequis 
@@ -135,6 +134,51 @@ Les sections suivantes présentent les différentes méthodes d'exécution de l'
 - Aller sur http://localhost:8000 dans un navigateur. 
 - Confirmer que le site fonctionne et qu'il est possible de naviguer (vous devriez voir plusieurs profils et locations).
 
+### Développement avec Docker Compose
+
+Pour reproduire un environnement proche de la production, le projet fournit une configuration Docker Compose permettant d'exécuter simultanément l'application Django et une base de données PostgreSQL.
+
+### Configuration
+
+Avant le premier lancement, créez un fichier `.env` à la racine du projet.
+
+Ce fichier contient les variables d'environnement nécessaires à la configuration de l'application et de la base de données. Pour des raisons de sécurité, il n'est pas versionné dans le dépôt Git.
+
+Les variables suivantes sont notamment requises :
+
+* `DEBUG`=False
+* `USE_SQLITE`=False
+* `POSTGRES_DB`=oc_lettings
+* `POSTGRES_USER`=oc_user
+* `POSTGRES_HOST`=db
+* `POSTGRES_PORT`=5432
+
+Les variables suivantes contiennent des informations sensibles. Leurs valeurs ne sont pas versionnées dans le dépôt Git et doivent être fournies séparément.
+
+* `SECRET_KEY`
+* `POSTGRES_PASSWORD`
+* `SENTRY_DSN`
+
+### Démarrage de l'environnement
+
+Une fois le fichier `.env` créé, démarrez les services à l'aide de Docker Compose :
+
+
+docker compose up --build
+
+Au démarrage, le conteneur de l'application applique automatiquement les migrations de la base de données avant de lancer le serveur Gunicorn.
+
+L'application est ensuite accessible à l'adresse :
+
+http://localhost:8000
+
+Les services sont exécutés au premier plan. Pour arrêter l'environnement, utilisez Ctrl + C ou lancez Docker Compose en mode détaché avec docker compose up -d.
+
+### Données de démonstration
+
+L'environnement de développement démarre avec une base PostgreSQL vide.
+
+Si vous souhaitez disposer d'un jeu de données d'exemple, les fixtures fournies avec le projet peuvent être chargées à l'aide de la commande `loaddata`. Cette procédure est décrite dans la documentation technique.
 
 #### Linting
 
