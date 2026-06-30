@@ -180,19 +180,201 @@ L'environnement de développement démarre avec une base PostgreSQL vide.
 
 Si vous souhaitez disposer d'un jeu de données d'exemple, les fixtures fournies avec le projet peuvent être chargées à l'aide de la commande `loaddata`. Cette procédure est décrite dans la documentation technique.
 
-#### Linting
+## Tests et qualité du code
+
+Le projet intègre plusieurs outils destinés à garantir la qualité du code et le bon fonctionnement de l'application. Les commandes ci-dessous sont à exécuter depuis la racine du projet, après activation de l'environnement virtuel :
 
 - `cd /path/to/Python-OC-Lettings-FR`
 - `source venv/bin/activate`
+
+### Linting
+
+La conformité du code aux règles de style (PEP 8) peut être vérifiée à l'aide de la commande suivante :
+
 - `flake8`
 
-#### Tests unitaires
+### Tests unitaires
 
-- `cd /path/to/Python-OC-Lettings-FR`
-- `source venv/bin/activate`
+Les tests unitaires sont exécutés avec `pytest` :
+
 - `pytest`
 
-#### Base de données
+### Couverture de tests
+
+La couverture des tests peut être mesurée avec :
+
+- `pytest --cov`
+
+Ces vérifications sont exécutées automatiquement par la pipeline d'intégration continue à chaque `push` et à chaque ouverture ou mise à jour d'une Pull Request. Les différentes étapes de cette pipeline sont détaillées dans la section suivante.
+
+## Pipeline CI/CD
+
+Le projet intègre une pipeline d'intégration et de déploiement continus (CI/CD) mise en œuvre avec GitHub Actions.
+
+À chaque `push` ou ouverture de Pull Request, la pipeline exécute automatiquement les étapes nécessaires pour vérifier la qualité du code. Lorsqu'une modification est intégrée à la branche `master`, elle poursuit le processus jusqu'à la construction de l'image Docker et au déploiement automatique de l'application sur Render.
+
+### Vue d'ensemble
+
+```text
+Push / Pull Request
+        │
+        ▼
+GitHub Actions
+        │
+        ▼
+Job "compile"
+        │
+        ├── Installation des dépendances
+        ├── Analyse statique (flake8)
+        └── Tests unitaires + couverture
+        │
+        └──────────────► Validation réussie
+                          │
+                          ▼
+                 (push sur master uniquement)
+                          │
+                          ▼
+                 Job "containerize"
+                          │
+                          ├── Build Docker
+                          ├── Tag SHA
+                          ├── Tag latest
+                          └── Push DockerHub
+                          │
+                          ▼
+                    Job "deploy"
+                          │
+                          ▼
+                         Render
+```
+
+### Job `compile`
+
+Ce premier job est exécuté à chaque `push` et à chaque Pull Request.
+
+Il réalise les opérations suivantes :
+
+* récupération du dépôt Git ;
+* installation de Python 3.10 ;
+* installation des dépendances du projet ;
+* exécution de l'analyse statique avec `flake8` ;
+* exécution des tests unitaires avec `pytest` ;
+* vérification d'un seuil minimal de 80 % de couverture de tests.
+
+Le job compile s'exécute dans un environnement GitHub Actions éphémère. À chaque exécution, une nouvelle machine virtuelle est provisionnée, les dépendances du projet sont installées, puis les opérations de linting et de tests sont exécutées. Une fois le job terminé, cet environnement est automatiquement détruit, garantissant des exécutions indépendantes et reproductibles sans impact sur les environnements de développement ou de production.
+
+Pour cette étape, l'application est configurée pour utiliser SQLite afin de disposer d'un environnement de test léger et reproductible.
+
+### Job `containerize`
+
+Ce job est exécuté uniquement lors d'un `push` sur la branche `master`.
+
+Après authentification auprès de DockerHub, il :
+
+* construit l'image Docker de l'application ;
+* applique deux tags (`latest` et le SHA du commit) ;
+* publie les deux images sur DockerHub.
+
+Cette stratégie permet de disposer à la fois d'une image représentant la dernière version stable et d'une image correspondant exactement à un commit donné.
+
+### Job `deploy`
+
+Une fois l'image publiée, le dernier job déclenche automatiquement le **Deploy Hook** de Render.
+
+Render télécharge alors la dernière image disponible sur DockerHub et redéploie l'application sans intervention manuelle.
+
+### Gestion des secrets
+
+Les informations sensibles utilisées par la pipeline sont stockées dans les **GitHub Actions Secrets**.
+
+Cette approche permet de ne jamais versionner les secrets dans le dépôt Git tout en les rendant accessibles aux différentes étapes de la pipeline.
+
+Les secrets utilisés comprennent notamment :
+
+* `SECRET_KEY`
+* `SENTRY_DSN`
+* `DOCKER_USERNAME`
+* `DOCKER_PASSWORD`
+* `RENDER_DEPLOY_HOOK`
+
+
+Cette architecture permet de garantir qu'aucun déploiement en production n'est réalisé tant que les étapes de validation (linting, tests unitaires et couverture de code) n'ont pas été exécutées avec succès.
+
+## Déploiement sur Render
+
+L’application est déployée automatiquement sur la plateforme **Render**, qui héberge le service web ainsi que la base de données PostgreSQL en environnement de production.
+
+Le déploiement est entièrement automatisé et s’appuie sur la pipeline CI/CD ainsi que sur une architecture conteneurisée via Docker.
+
+### Architecture de déploiement
+
+Le déploiement repose sur le flux suivant :
+
+- GitHub Actions construit et publie une image Docker sur DockerHub
+- Render récupère automatiquement cette image via un **Deploy Hook**
+- L’application est redéployée sans intervention manuelle
+
+### Service web Render
+
+Le service web Render est configuré pour :
+
+- exécuter un conteneur Docker basé sur l’image publiée sur DockerHub
+- exposer l’application via un port dynamique fourni par Render
+- exécuter automatiquement le script `start.sh` au démarrage
+
+### Script de démarrage (`start.sh`)
+
+Au lancement du conteneur, le script `start.sh` est exécuté automatiquement.
+
+Il effectue les opérations suivantes :
+
+- application des migrations Django sur la base de données PostgreSQL
+- lancement du serveur WSGI via Gunicorn
+
+Ce mécanisme garantit que la base de données est toujours synchronisée avec le schéma de l’application au moment du déploiement.
+
+### Base de données PostgreSQL
+
+En production, l’application utilise une base de données PostgreSQL managée par Render. Les informations de connexion sont fournies via des variables d’environnement injectées directement dans le service Render. Ces variables ne sont jamais versionnées dans le dépôt Git.
+
+### Variables d’environnement
+
+Render gère la configuration de l’application via des variables d’environnement définies dans son interface.
+
+Elles permettent notamment de :
+
+- Configurer la connexion à la base de données PostgreSQL
+- Activer ou désactiver le mode debug
+- Fournir les clés de services externes (Sentry, etc.)
+
+### Healthcheck
+
+Render effectue un **healthcheck HTTP** sur l’application afin de vérifier que le service répond correctement après déploiement.
+
+Ce mécanisme permet de s’assurer que :
+
+- le conteneur démarre correctement
+- le serveur Gunicorn est opérationnel
+- l’application est accessible avant d’exposer le service
+
+En cas d’échec du healthcheck, le déploiement est considéré comme non valide.
+
+### Déclenchement du déploiement
+
+Le déploiement est automatiquement déclenché lorsqu’un commit (ou une pull request) est validé(e) sur la branche principale (master).
+
+Le job deploy de la pipeline CI/CD envoie une requête HTTP au Deploy Hook Render, ce qui provoque :
+
+- La récupération de la dernière image Docker
+- Le redémarrage du service
+- Exécution automatique du healthcheck
+- La mise en production immédiate des modifications si le healthcheck est un succès
+
+Une fois le déploiement terminé, l’application est accessible publiquement via l’URL fournie par Render.
+
+## Autres commandes utiles
+
+### Base de données
 
 - `cd /path/to/Python-OC-Lettings-FR`
 - Ouvrir une session shell `sqlite3`
@@ -203,12 +385,29 @@ Si vous souhaitez disposer d'un jeu de données d'exemple, les fixtures fournies
   Python-OC-Lettings-FR_profile where favorite_city like 'B%';`
 - `.quit` pour quitter
 
-#### Panel d'administration
+### Panel d'administration
 
 - Aller sur `http://localhost:8000/admin`
 - Connectez-vous avec l'utilisateur `admin`, mot de passe `Abc1234!`
 
-Utilisation de PowerShell, comme ci-dessus sauf :
+## Liens utiles
 
-- Pour activer l'environnement virtuel, `.\venv\Scripts\Activate.ps1` 
-- Remplacer `which <my-command>` par `(Get-Command <my-command>).Path`
+Les documentations officielles suivantes permettent d'approfondir les technologies utilisées dans ce projet :
+
+- GitHub : https://docs.github.com/fr
+- Docker : https://docs.docker.com/
+- GitHub Actions : https://docs.github.com/fr/actions
+- Render : https://render.com/docs
+
+## Documentation complète
+
+La documentation technique du projet est générée avec **Sphinx** et publiée via **Read the Docs**.
+
+Elle est accessible ici :  
+👉 
+
+## Auteur
+
+Jérémy Muller, étudiant en développement applicatif python chez OpenClassrooms.
+
+GitHub : https://github.com/Jeremuller/
