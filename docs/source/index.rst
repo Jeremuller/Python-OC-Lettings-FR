@@ -6,12 +6,23 @@
 Orange County Lettings documentation
 ====================================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+Welcome to the technical documentation of the Orange County Lettings project.
 
+This documentation explains the project's architecture, installation process,
+development workflow, deployment pipeline and application components.
+
+Use the navigation menu below to browse each section.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   introduction
+   installation
+   local_usage
+   technologies
+   architecture
+   database
+   views_and_endpoints
+   usage
+   deployment
