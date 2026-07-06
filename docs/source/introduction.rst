@@ -4,46 +4,43 @@ Introduction
 Project overview
 ----------------
 
-Orange County Lettings is a web application built with the Django framework.
+Orange County Lettings is a Django-based web application that allows users to browse property listings and view detailed information about associated user profiles.
 
-The application allows users to browse property listings and view detailed information about associated profiles.
-
-The project follows a modular architecture in order to clearly separate concerns between the different application components (users, listings, main site, etc.).
+The project is designed with a modular architecture to ensure a clear separation of concerns between its different components (users, listings, main site, etc.).
 
 Development context
 -------------------
 
-This project was developed as part of the **Python Application Developer** training program provided by OpenClassrooms.
+This project was developed as part of the Python Application Developer program at OpenClassrooms.
 
-It serves as a practical implementation of key software engineering concepts, including:
+It serves as a practical implementation of core software engineering concepts, including:
 
-- web application development using Django
-- modular project architecture design
+- Django web application development
+- modular architecture design
 - reproducible development environments
-- continuous integration and deployment (CI/CD)
-- production deployment automation
+- CI/CD pipelines and automation
 
 Technical objectives
 --------------------
 
-Beyond functional implementation, this project aims to demonstrate the ability to manage a complete software development lifecycle:
+Beyond functional requirements, this project demonstrates the ability to manage a complete software development lifecycle:
 
-- source code management with Git and GitHub
-- code quality enforcement using linting (flake8)
+- Git and GitHub version control
+- code quality enforcement with linting (flake8)
 - unit testing with pytest
-- test coverage measurement
-- automated checks using GitHub Actions
+- test coverage analysis
+- automated workflows using GitHub Actions
 - containerization with Docker
 - automated deployment to production environments
 
 High-level architecture
 -----------------------
 
-The application is composed of several main components:
+The application consists of several core components:
 
-- a Django web application handling business logic and user interface
-- a relational database system, using SQLite in development/testing and PostgreSQL in production
-- a CI/CD pipeline responsible for automated testing and deployment
-- a containerized deployment infrastructure using Docker and Render
+- a Django web application handling business logic and the user interface
+- a relational database (SQLite in quickstart/testing, PostgreSQL in development production)
+- a CI/CD pipeline for automated testing and deployment
+- a containerized infrastructure using Docker and Render
 
-The following sections of this documentation provide details on installation, usage, system architecture, and deployment procedures.
+The following sections of this documentation provide more details on installation, usage, architecture, and deployment.

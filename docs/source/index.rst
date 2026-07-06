@@ -19,7 +19,6 @@ Use the navigation menu below to browse each section.
 
    introduction
    installation
-   local_usage
    technologies
    architecture
    database
