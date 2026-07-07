@@ -6,7 +6,7 @@ Orange County Lettings est une application web développée avec Django pour une
 
 Ce projet a consisté à améliorer une application existante en la restructurant autour d'une architecture Django modulaire et en mettant en place une chaîne d'intégration et de déploiement continus (CI/CD).
 
-La documentation complète du projet est disponible ici : 
+La documentation complète du projet est disponible ici : https://oc-lettings-site-jeremuller.readthedocs.io/en/latest/
 
 ## Fonctionnalités
 
