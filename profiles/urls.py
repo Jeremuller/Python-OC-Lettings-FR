@@ -1,12 +1,8 @@
 """
-URL configuration for the profiles application.
+URL configuration for the ``profiles`` application.
 
-This module defines the URL patterns associated with the profiles app.
-It maps URL paths to their corresponding view functions responsible
-for rendering profile listings and individual profile details.
-
-The `app_name` variable enables namespaced URL resolution within
-the Django project.
+This module maps the application's URL patterns to the corresponding
+view functions and defines the namespace used for URL resolution.
 """
 
 from django.urls import path

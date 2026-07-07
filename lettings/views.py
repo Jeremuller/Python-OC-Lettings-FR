@@ -1,11 +1,8 @@
 """
-Views for the lettings application.
+Views for the ``lettings`` application.
 
-This module defines view functions responsible for displaying
-the list of available lettings and the details of a specific letting.
-
-Each view retrieves data from the database using the Letting model
-and renders the appropriate HTML template with a context dictionary.
+This module provides the views responsible for displaying the list
+of available lettings and the details of a specific letting.
 """
 
 from django.shortcuts import render, get_object_or_404
@@ -19,16 +16,16 @@ logger = logging.getLogger(__name__)
 
 def lettings_index(request: HttpRequest) -> HttpResponse:
     """
-    Display the list of all available lettings.
+    Render the page listing all available lettings.
 
-    This view retrieves all Letting instances from the database
-    and renders them using the ``lettings/index.html`` template.
+    This view retrieves all lettings from the database and displays them
+    on the lettings index page.
 
-    This view logs access attempts for monitoring purposes.
+    An informational log entry is generated whenever the page is accessed.
 
-    :param request: The HTTP request object.
+    :param request: Incoming HTTP request.
     :type request: HttpRequest
-    :return: Rendered HTML page displaying the list of lettings.
+    :returns: Rendered lettings index page.
     :rtype: HttpResponse
     """
     logger.info(
@@ -45,21 +42,19 @@ def lettings_index(request: HttpRequest) -> HttpResponse:
 
 def letting(request: HttpRequest, letting_id: int) -> HttpResponse:
     """
-    Display the details of a specific letting.
+    Render the page displaying details of a specific letting.
 
-    This view retrieves a single Letting instance based on its
-    primary key and renders its details using the
-    ``lettings/letting.html`` template.
+    This view retrieves a letting by its unique identifier and displays
+    its details on the letting detail page.
 
-    This view logs access attempts for monitoring purposes.
+    An informational log entry is generated whenever the page is accessed.
 
-    :param request: The HTTP request object.
+    :param request: Incoming HTTP request.
     :type request: HttpRequest
-    :param letting_id: The unique identifier of the letting.
+    :param letting_id: Unique identifier of the letting.
     :type letting_id: int
-    :return: Rendered HTML page displaying the letting details.
+    :returns: Rendered letting detail page.
     :rtype: HttpResponse
-    :raises Http404: If no letting matches the given ID.
     """
     logger.info(
         "Letting detail accessed",

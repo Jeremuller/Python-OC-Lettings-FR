@@ -1,15 +1,11 @@
 """
-URL configuration for the main Django project (oc_lettings_site).
+Root URL configuration for the Orange County Lettings project.
 
-This module defines the root URL patterns for the project, including:
+This module defines the application's main URL routing, including the
+home page, the Django administration interface and the URL configurations
+of the ``lettings`` and ``profiles`` applications.
 
-- The home page (`index`)
-- Inclusion of the lettings app URLs
-- Inclusion of the profiles app URLs
-- Django admin interface
-
-It maps URL paths to the corresponding view functions or included
-URLconfs. Namespacing is managed at the app level where necessary.
+Custom handlers for HTTP 404 and 500 errors are also registered here.
 """
 
 from django.contrib import admin

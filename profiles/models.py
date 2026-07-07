@@ -1,9 +1,8 @@
 """
-Models for the profiles application.
+Database models for the ``profiles`` application.
 
-This module defines the Profile model, which extends the built-in
-Django User model with additional application-specific data,
-such as the user's favorite city.
+This module defines the data model used to associate additional
+profile information with Django's built-in authentication system.
 """
 
 from django.db import models
@@ -12,14 +11,13 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     """
-    Profile model extending Django's built-in User.
+    Store additional information associated with a Django user.
 
-    Attributes:
-        user (OneToOneField): A one-to-one relationship with the User model,
-            ensuring each user has a single profile. The related_name
-            "new_user" allows reverse access from User instances.
-        favorite_city (CharField): Optional field storing the user's
-            favorite city, with a maximum length of 64 characters.
+    Each profile is linked to a single ``User`` instance through a
+    one-to-one relationship and currently stores the user's favorite city.
+
+    The model extends Django's authentication system without modifying
+    the built-in ``User`` model.
     """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="new_user")
@@ -27,18 +25,18 @@ class Profile(models.Model):
 
     def __str__(self):
         """
-        Returns a string representation of the Profile instance.
+        Return the username associated with this profile.
 
-        Returns:
-            str: The username of the associated User.
+        :returns: Username of the related user.
+        :rtype: str
         """
         return self.user.username
 
     class Meta:
         """
-        Metadata for the Profile model.
+        Define metadata associated with the ``Profile`` model.
 
-        Attributes:
-            db_table (str): Explicit database table name for the model.
+        The explicit database table name preserves compatibility with the
+        original project schema.
         """
         db_table = "profiles_profile"

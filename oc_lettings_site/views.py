@@ -1,8 +1,8 @@
 """
 Views for the main Django project (oc_lettings_site).
 
-This module contains view functions responsible for rendering
-the templates of the project's main pages, such as the home page.
+This module defines the views responsible for rendering the application's
+home page and custom HTTP error pages.
 """
 
 from django.shortcuts import render
@@ -13,16 +13,17 @@ logger = logging.getLogger(__name__)
 
 def index(request):
     """
-    Render the home page of the Orange County Lettings site.
+    Render the application's home page.
 
-    This view handles requests to the root URL ('/') and returns
-    the main landing page.
+    This view handles requests to the root URL (``/``) and returns
+    the main landing page of the Orange County Lettings application.
 
-    An info log is recorded to track normal application traffic.
+    An informational log entry is generated each time the page is
+    successfully accessed.
 
-    :param request: The HTTP request object.
+    :param request: Incoming HTTP request.
     :type request: HttpRequest
-    :return: Rendered home page template.
+    :returns: Rendered home page.
     :rtype: HttpResponse
     """
     logger.info("Homepage accessed")
@@ -34,15 +35,15 @@ def page_not_found(request, exception):
     """
     Render the custom 404 error page.
 
-    This view is used by Django when a requested URL does not exist.
+    This view is invoked when Django cannot resolve the requested URL.
 
-    A warning log is recorded to track invalid navigation attempts.
+    A warning is logged to record the requested path and HTTP method.
 
-    :param request: The HTTP request object.
+    :param request: Incoming HTTP request.
     :type request: HttpRequest
-    :param exception: The exception raised by the resolver.
+    :param exception: URL resolution exception.
     :type exception: Exception
-    :return: Rendered 404 error page with HTTP status 404.
+    :returns: Rendered 404 error page.
     :rtype: HttpResponse
     """
     logger.warning("404 error encountered", extra={"path": request.path, "method": request.method})
@@ -53,14 +54,13 @@ def server_error(request):
     """
     Render the custom 500 error page.
 
-    This view is used by Django when an unhandled server error occurs.
+    This view is called whenever an unhandled server error occurs.
 
-    An error log is recorded to capture critical failures for
-    monitoring and debugging purposes.
+    An error is logged to facilitate monitoring and post-mortem debugging.
 
-    :param request: The HTTP request object.
+    :param request: Incoming HTTP request.
     :type request: HttpRequest
-    :return: Rendered 500 error page with HTTP status 500.
+    :returns: Rendered 500 error page.
     :rtype: HttpResponse
     """
     logger.error("500 error encountered", extra={"path": request.path, "method": request.method})

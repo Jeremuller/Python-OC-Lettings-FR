@@ -19,7 +19,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
-    command: gunicorn oc_lettings_site.wsgi:application --bind 0.0.0.0:8000
+    command: ./start.sh
 
 volumes:
   oc_lettings_postgres_data:

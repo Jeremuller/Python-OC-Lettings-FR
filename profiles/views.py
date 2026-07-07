@@ -1,10 +1,8 @@
 """
-Views module for the profiles application.
+Views for the ``profiles`` application.
 
-This module contains the view functions responsible for rendering
-the profiles list and individual profile detail pages.
-Each view retrieves data from the database and passes it to
-the corresponding templates for rendering.
+This module provides the views responsible for displaying the list
+of user profiles and individual profile details.
 """
 
 from django.shortcuts import render, get_object_or_404
@@ -17,18 +15,16 @@ logger = logging.getLogger(__name__)
 
 def profiles_index(request):
     """
-    Render a page displaying all profiles.
+    Render the page listing all user profiles.
 
-    Retrieves all Profile instances from the database and passes them
-    to the 'profiles/index.html' template under the context variable
-    'profiles_list'.
+    This view handles requests to the profiles index page and displays
+    every available profile.
 
-    This view logs access events for monitoring purposes.
+    An informational log entry is generated whenever the page is accessed.
 
-    :param request: The HTTP request object.
+    :param request: Incoming HTTP request.
     :type request: HttpRequest
-
-    :return: Rendered HTML page with the list of profiles.
+    :returns: Rendered profiles index page.
     :rtype: HttpResponse
     """
 
@@ -46,23 +42,20 @@ def profiles_index(request):
 
 def profile(request, username):
     """
-    Render a page displaying details of a specific profile.
+    Render the detail page of a user profile.
 
-    Retrieves a Profile instance from the database corresponding
-    to the provided username and passes it to the
-    'profiles/profile.html' template under the context variable 'profile'.
+    This view retrieves the profile associated with the provided username
+    and displays its information.
 
-    This view logs access events for monitoring purposes.
+    An informational log entry is generated whenever a profile is viewed.
 
-    :param request: The HTTP request object.
+    :param request: Incoming HTTP request.
     :type request: HttpRequest
-    :param username: The username of the user whose profile is requested.
+    :param username: Username identifying the requested profile.
     :type username: str
-
-    :return: Rendered HTML page with the profile details.
+    :returns: Rendered profile detail page.
     :rtype: HttpResponse
-
-    :raises Http404: If no profile matches the given username.
+    :raises Http404: If no matching profile exists.
     """
 
     logger.info(
