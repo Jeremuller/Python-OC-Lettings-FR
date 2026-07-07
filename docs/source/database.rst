@@ -30,8 +30,7 @@ Main entities include:
 
 - ``Letting``: represents a property listing;
 - ``Address``: stores the location information associated with a letting;
-- ``Profile``: extends Django's built-in authentication system by
-associating additional information with each user.
+- ``Profile``: extends Django's built-in authentication system by associating additional information with each user.
 
 The models are managed through Django migrations, which ensure that the
 database schema remains synchronized with the application code.

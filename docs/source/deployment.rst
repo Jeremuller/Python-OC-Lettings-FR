@@ -24,7 +24,7 @@ When changes are merged into the production branch, the pipeline:
 
 #. Builds a new Docker image.
 #. Publishes the image to Docker Hub.
-#.Triggers a deployment on Render using a Deploy Hook.
+#. Triggers a deployment on Render using a Deploy Hook.
 #. Starts the updated production container.
 
 The Render Deploy Hook allows the CI/CD pipeline to remotely trigger a new
