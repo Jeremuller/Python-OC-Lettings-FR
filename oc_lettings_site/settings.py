@@ -1,35 +1,12 @@
 """
-Django settings for the oc_lettings_site project.
+Application settings for the Orange County Lettings project.
 
-This configuration file defines the settings used to run the application
-across development, testing and production environments.
+This module defines the Django configuration shared across development,
+testing and production environments.
 
-Main features include:
-
-Django application registration
-Middleware configuration
-Template configuration
-Environment-based database selection (SQLite or PostgreSQL)
-Authentication and password validation
-Internationalization settings
-Static files management with WhiteNoise
-Error monitoring with Sentry
-Environment variable configuration through .env files
-
-Database strategy:
-
-SQLite is used for local development and CI testing when
-USE_SQLITE is enabled.
-PostgreSQL is used for containerized and production deployments.
-
-Static assets are collected during the Docker image build process
-and served through WhiteNoise.
-
-Sensitive settings such as credentials, secret keys and deployment
-configuration are injected through environment variables.
-
-This file is designed to support both local development and
-production-ready deployments.
+The configuration relies on environment variables to adapt the application's
+behavior, including database selection, static file management, logging and
+error monitoring.
 """
 
 import os

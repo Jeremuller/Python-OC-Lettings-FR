@@ -1,16 +1,8 @@
 """
-Database models for the lettings application.
+Database models for the ``lettings`` application.
 
-This module defines the core data structures used to represent
-rental properties and their associated addresses.
-
-Two main models are provided:
-
-- Address: Represents a physical location with validation constraints.
-- Letting: Represents a rental unit associated with a unique address.
-
-These models are mapped to dedicated database tables and enforce
-basic validation rules at the model level.
+This module defines the data models used to represent rental properties
+and their associated addresses.
 """
 
 from django.db import models
@@ -19,19 +11,11 @@ from django.core.validators import MaxValueValidator, MinLengthValidator
 
 class Address(models.Model):
     """
-    Represents a physical address associated with a letting.
+    Represent the physical location of a rental property.
 
-    The Address model stores structured location data and enforces
-    validation rules on numerical and string-based fields to ensure
-    consistency of stored information.
-
-    Attributes:
-        number (PositiveIntegerField): Street number (maximum 4 digits).
-        street (CharField): Street name (maximum 64 characters).
-        city (CharField): City name (maximum 64 characters).
-        state (CharField): Two-character state code (minimum length enforced).
-        zip_code (PositiveIntegerField): Postal code (maximum 5 digits).
-        country_iso_code (CharField): ISO country code (3 characters minimum).
+    This model stores the address associated with a letting and
+    enforces basic validation rules on its fields to ensure data
+    consistency.
     """
 
     number = models.PositiveIntegerField(validators=[MaxValueValidator(9999)])
@@ -43,16 +27,19 @@ class Address(models.Model):
 
     def __str__(self) -> str:
         """
-        Return a human-readable representation of the address.
+        Return a readable representation of the address.
 
-        Returns:
-            str: A formatted string combining street number and street name.
+        :returns: Street number followed by the street name.
+        :rtype: str
         """
         return f"{self.number} {self.street}"
 
     class Meta:
         """
-        Metadata configuration for the Address model.
+        Define metadata associated with the ``Address`` model.
+
+        The explicit database table name preserves compatibility with the
+        original project schema.
         """
 
         db_table = "lettings_address"
@@ -62,15 +49,11 @@ class Address(models.Model):
 
 class Letting(models.Model):
     """
-    Represents a rental property.
+    Represent a rental property available through the application.
 
-    The Letting model links a rental unit to a unique Address instance
-    using a one-to-one relationship. Each letting corresponds to exactly
-    one physical address.
-
-    Attributes:
-        title (CharField): Name or title of the letting (maximum 256 characters).
-        address (OneToOneField): Unique associated Address instance.
+    Each letting is associated with a unique ``Address`` instance,
+    allowing the application to separate property information from
+    location data.
     """
 
     title = models.CharField(max_length=256)
@@ -78,16 +61,19 @@ class Letting(models.Model):
 
     def __str__(self):
         """
-        Return a human-readable representation of the letting.
+        Return the title of the letting.
 
-        Returns:
-            str: The lettings title.
+        :returns: Letting title.
+        :rtype: str
         """
         return self.title
 
     class Meta:
         """
-        Metadata configuration for the Letting model.
+        Define metadata associated with the ``Letting`` model.
+
+        The explicit database table name preserves compatibility with the
+        original project schema.
         """
 
         db_table = "lettings_letting"

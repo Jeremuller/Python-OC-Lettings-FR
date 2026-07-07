@@ -1,12 +1,8 @@
 """
-URL configuration for the lettings application.
+URL configuration for the ``lettings`` application.
 
-This module defines the URL patterns associated with the lettings app.
-It maps URL paths to their corresponding view functions responsible
-for rendering letting listings and individual letting details.
-
-The `app_name` variable enables namespaced URL resolution within
-the Django project.
+This module maps URL patterns to their corresponding view functions
+and defines the namespace used for URL resolution.
 """
 
 from django.urls import path
