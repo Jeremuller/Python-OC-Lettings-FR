@@ -23,5 +23,4 @@ Use the navigation menu below to browse each section.
    architecture
    database
    views_and_endpoints
-   usage
    deployment
