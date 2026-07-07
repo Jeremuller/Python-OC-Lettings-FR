@@ -6,7 +6,7 @@ Project overview
 
 Orange County Lettings is a Django-based web application that allows users to browse property listings and view detailed information about associated user profiles.
 
-The project is designed with a modular architecture to ensure a clear separation of concerns between its different components (users, listings, main site, etc.).
+The project is designed with a modular architecture to ensure a clear separation of concerns between its different components (profiles, lettings, main site, etc.).
 
 Development context
 -------------------
@@ -26,7 +26,7 @@ Technical objectives
 Beyond functional requirements, this project demonstrates the ability to manage a complete software development lifecycle:
 
 - Git and GitHub version control
-- code quality enforcement with linting (flake8)
+- code quality analysis with linting tools
 - unit testing with pytest
 - test coverage analysis
 - automated workflows using GitHub Actions
@@ -39,8 +39,9 @@ High-level architecture
 The application consists of several core components:
 
 - a Django web application handling business logic and the user interface
-- a relational database (SQLite in quickstart/testing, PostgreSQL in development production)
+- a relational database (SQLite in quickstart/testing, PostgreSQL in development and production)
 - a CI/CD pipeline for automated testing and deployment
-- a containerized infrastructure using Docker and Render
+- a Docker-based deployment infrastructure hosted on Render
 
-The following sections of this documentation provide more details on installation, usage, architecture, and deployment.
+The following sections of this documentation provide more details on
+installation, architecture, application components, use cases and deployment.

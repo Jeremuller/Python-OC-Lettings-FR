@@ -1,8 +1,8 @@
 Views and endpoints
 ===================
 
-The application exposes HTTP endpoints through Django URL routing.
-Each endpoint is associated with a view function responsible for processing
+The application exposes web routes through Django URL routing.
+Each route is associated with a view function responsible for processing
 requests and returning the appropriate response.
 
 Request handling
@@ -11,7 +11,7 @@ Request handling
 Django processes incoming requests through the following workflow:
 
 1. The URL dispatcher matches the requested path with a configured route.
-2. The associated view retrieves or processes the required data.
+2. The associated view retrieves or processes the required data using models.
 3. The view renders a template with the provided context.
 4. Django returns the generated HTTP response to the client.
 
@@ -20,6 +20,7 @@ URL organization
 
 Each Django application defines its own URL configuration:
 
+- ``oc_lettings_site``: global URL configuration;
 - ``lettings`` manages property listing pages;
 - ``profiles`` manages user profile pages.
 

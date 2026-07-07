@@ -1,49 +1,52 @@
 Deployment
 ==========
 
-Deployment overview
--------------------
+The Orange County Lettings application is deployed on Render using a
+containerized production environment.
 
-The application is deployed through an automated CI/CD pipeline.
-The deployment process ensures that code quality checks and tests are
-validated before releasing a new version.
-
-Continuous integration
-----------------------
-
-The CI pipeline is managed with GitHub Actions.
-
-The workflow performs:
-
-- dependency installation;
-- code quality checks with flake8;
-- automated tests with pytest;
-- coverage measurement.
-
-Containerization
-----------------
-
-The application is containerized using Docker.
-
-The production container includes:
-
-- the Django application;
-- Gunicorn as the WSGI server;
-- PostgreSQL database connectivity.
-
-Production environment
-----------------------
-
-The application is deployed on Render.
+Production architecture
+-----------------------
 
 The production environment relies on:
 
-- PostgreSQL for persistent data storage;
-- Gunicorn to serve the Django application;
-- WhiteNoise for static files handling.
+- Docker for application containerization;
+- Render as hosting platform;
+- PostgreSQL as persistent database;
+- Gunicorn as WSGI server;
+- WhiteNoise for static file serving.
 
-Monitoring
-----------
+Deployment process
+------------------
 
-Application monitoring is provided through Sentry, which collects runtime
-errors and helps identify production issues.
+The deployment process is automated through the CI/CD pipeline.
+
+When changes are merged into the production branch, the pipeline:
+
+#. Builds a new Docker image.
+#. Publishes the image to Docker Hub.
+#. Triggers a deployment on Render using a Deploy Hook.
+#. Starts the updated production container.
+
+The Render Deploy Hook allows the CI/CD pipeline to remotely trigger a new
+deployment while keeping deployment credentials outside the source code.
+
+Application startup
+-------------------
+
+When the container starts:
+
+#. The environment variables are loaded.
+#. Database migrations are applied through ``start.sh``.
+#. Gunicorn starts the Django application.
+#. The application becomes available through the Render service.
+
+Configuration management
+------------------------
+
+Sensitive configuration values are provided through environment variables.
+
+The following elements are configured externally:
+
+- Django secret key;
+- database credentials;
+- deployment settings.

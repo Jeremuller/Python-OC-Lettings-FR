@@ -11,7 +11,7 @@ Project structure
 The project is composed of three main Django applications:
 
 - ``oc_lettings_site``: global project configuration, URL routing, WSGI application
-  and shared settings;
+  and project settings;
 - ``lettings``: management of property listings and associated data;
 - ``profiles``: management of user profiles and user-related information.
 
@@ -41,7 +41,7 @@ A typical request follows this workflow:
 Deployment architecture
 -----------------------
 
-The application is containerized using Docker and deployed through a CI/CD
+The application is containerized using Docker and deployed automatically through a CI/CD
 pipeline.
 
 The production architecture relies on:
@@ -51,5 +51,5 @@ The production architecture relies on:
 - Gunicorn as the WSGI server;
 - Render as the hosting platform.
 
-The source code reference generated from docstrings is available in the
-dedicated code reference section of this documentation.
+The detailed source code reference generated from docstrings is available in the
+dedicated API reference sections of this documentation.
