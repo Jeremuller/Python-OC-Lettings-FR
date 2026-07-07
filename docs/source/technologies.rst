@@ -1,7 +1,7 @@
 Technologies
 ============
 
-The Orange County Lettings project is built on a modern Python web stack designed for scalability, maintainability, and deployment readiness.
+The Orange County Lettings project is built on a Python web stack designed to improve maintainability, reproducibility, and deployment automation.
 
 Backend
 -------
@@ -19,7 +19,7 @@ Containerization
 -----------------
 
 - Docker: container runtime for the application
-- Docker Compose: orchestration of multi-service environments
+- Docker Compose: configuration and orchestration of the application services
 
 CI/CD
 -----
@@ -39,7 +39,7 @@ Production stack
 
 - Gunicorn: WSGI HTTP server for running Django in production
 - WhiteNoise: static file serving without external storage
-- Render: cloud platform used for deployment
+- Render: cloud platform used for hosting and deployment
 
 Monitoring and configuration
 -----------------------------

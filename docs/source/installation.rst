@@ -1,7 +1,7 @@
 Installation
 ============
 
-This section explains how to install and configure the Orange County Lettings project in a local environment.
+This section explains how to install and configure the Orange County Lettings project in a local environment or with Docker.
 
 It complements the README by providing a more detailed setup procedure and environment configuration.
 
@@ -17,7 +17,6 @@ Ensure the following tools are installed:
 
 - Git
 - Python 3.10+
-- pip
 - Docker and Docker Compose (optional but recommended)
 
 Project cloning
@@ -133,13 +132,5 @@ This is handled by the `start.sh` script and ensures the database schema is alwa
 Environment differences
 -----------------------
 
-- Local setup: SQLite (lightweight, development-friendly)
+- Local setup: SQLite (lightweight, portability)
 - Docker setup: PostgreSQL (production-like)
-
-Summary
--------
-
-Two execution modes are available:
-
-- local environment for development and debugging
-- Docker environment for production-like execution

@@ -13,7 +13,7 @@ Database environments
 The project uses different database backends depending on the execution
 environment:
 
-- **SQLite** is used for local development and testing. It provides a lightweight
+- **SQLite** is used for quickstart and automated tests. It provides a lightweight
   database solution requiring no additional service configuration.
 - **PostgreSQL** is used for Docker and production environments. It provides a
   more robust and scalable database system suitable for deployment.
@@ -30,7 +30,8 @@ Main entities include:
 
 - ``Letting``: represents a property listing;
 - ``Address``: stores the location information associated with a letting;
-- ``Profile``: stores additional information associated with a user.
+- ``Profile``: extends Django's built-in authentication system by
+associating additional information with each user.
 
 The models are managed through Django migrations, which ensure that the
 database schema remains synchronized with the application code.

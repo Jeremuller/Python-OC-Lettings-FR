@@ -59,5 +59,5 @@ A typical contribution follows the project's development workflow:
 #. Create a feature branch.
 #. Implement the requested changes.
 #. Push the branch to GitHub.
-#. Let the CI pipeline validate the contribution.
+#. Trigger the CI pipeline to validate the contribution.
 #. Merge and deploy the application.
